@@ -33,11 +33,11 @@ contract reward is Ownable {
     
     }
 
-    function redeemreward(address add,uint amount)public{
+    function redeemreward(uint amount)public{
         require(msg.sender==stakingaddress);
         require(_dbar.balanceOf(address(this))>= amount );
         _dbar.approve(msg.sender, amount) ;
-        _dbar.transferFrom(address(this),add,amount);
+        _dbar.transferFrom(address(this),msg.sender,amount);
     
         
     }
