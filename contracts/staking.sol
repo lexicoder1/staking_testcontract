@@ -25,19 +25,19 @@ contract staking is ERC20("XDbar", "xDbar"), Ownable {
     }
 
    function stake(uint amount)public{
-        require(_dbar.balanceOf(msg.sender)>= amount*10**18 );
-        require(checkifstaked[msg.sender]==false);
+        require(_dbar.balanceOf(msg.sender)>= amount*10**18 ,"not enough balance" );
+        require(checkifstaked[msg.sender]==false,"please redeem stake before staking again");
         trackblock[msg.sender]=block.number;
          _mint(msg.sender, amount*10**18);
          checkifstaked[msg.sender]=true;
-         _dbar.transfer(address(this),amount*10**18);
+         _dbar.transferFrom(msg.sender,address(this),amount*10**18);
    
     }   
 
 
 
    function redeem()public{
-     require(checkifstaked[msg.sender]==true);
+     require(checkifstaked[msg.sender]==true, "cant redeem you havent staked");
   
      uint rewardblockno= block.number- trackblock[msg.sender];
      uint reward=rewardblockno*(10*10**18);
@@ -45,8 +45,7 @@ contract staking is ERC20("XDbar", "xDbar"), Ownable {
       checkifstaked[msg.sender]=false;
      _burn(msg.sender,balanceOf(msg.sender));
      _Ireward.redeemreward(reward);
-     _dbar.approve(msg.sender, _reward) ;
-     _dbar.transferFrom(address(this),msg.sender,_reward);
+     _dbar.transfer(msg.sender,_reward);
 
    }
 

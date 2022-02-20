@@ -10,6 +10,7 @@ interface IERC20 {
 
 
     function approve(address spender, uint256 amount) external returns (bool);
+     function transfer(address to, uint256 amount) external returns (bool);
 
  
     function transferFrom(
@@ -34,12 +35,12 @@ contract reward is Ownable {
     }
 
     function redeemreward(uint amount)public{
-        require(msg.sender==stakingaddress);
-        require(_dbar.balanceOf(address(this))>= amount );
-        _dbar.approve(msg.sender, amount) ;
-        _dbar.transferFrom(address(this),msg.sender,amount);
-    
-        
+        require(msg.sender==stakingaddress,"you are not permited to call this function");
+        require(_dbar.balanceOf(address(this))>= amount , "not enough balance in contract ");
+       
+         _dbar.transfer(msg.sender,amount);
+     
+         
     }
 
 }
